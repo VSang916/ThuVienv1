@@ -1,5 +1,6 @@
 package com.example.library_management.enums;
 
-public class UserRole {
-    
+public enum  UserRole {
+    ADMIN,
+    USER
 }
