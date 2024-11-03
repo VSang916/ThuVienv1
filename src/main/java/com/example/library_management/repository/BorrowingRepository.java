@@ -1,5 +1,22 @@
 package com.example.library_management.repository;
 
-public class BorrowingRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.library_management.entity.Borrowing;
+
+@Repository
+public interface BorrowingRepository extends JpaRepository<Borrowing, Long> {
+    // Tìm tất cả các lần mượn theo ID của người đọc
+    List<Borrowing> findByReaderId(Long readerId);
     
+    // Tìm tất cả các lần mượn theo ID của sách
+    List<Borrowing> findByBookId(Long bookId);
+    
+    // Tìm tất cả các lần mượn theo trạng thái
+    List<Borrowing> findByStatus(com.example.library_management.enums.BorrowingStatus status);
+    
+    // Thêm các phương thức tùy chỉnh nếu cần
 }
