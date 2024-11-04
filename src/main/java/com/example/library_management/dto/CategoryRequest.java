@@ -1,5 +1,7 @@
 package com.example.library_management.dto;
 
+import com.example.library_management.entity.Category;
+
 public class CategoryRequest {
     private String categoryName;
 

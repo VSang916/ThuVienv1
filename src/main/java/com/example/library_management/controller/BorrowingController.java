@@ -1,7 +1,9 @@
 package com.example.library_management.controller;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_management.dto.BorrowingRequest;
 import com.example.library_management.entity.Borrowing;
+import com.example.library_management.enums.BorrowingStatus;
 import com.example.library_management.exception.ResourceNotFoundException;
 import com.example.library_management.service.BorrowingService;
-
 @RestController
 @RequestMapping("/api/borrowings")
 public class BorrowingController {
@@ -79,5 +81,41 @@ public class BorrowingController {
         } catch (Exception ex){
             return ResponseEntity.notFound().build();
         }
+    }
+        @GetMapping("/weekly")
+    public ResponseEntity<Map<String, Long>> getWeeklyBorrowings(
+            @RequestParam int year,
+            @RequestParam int week) {
+        List<Borrowing> borrowings = borrowingService.getBorrowingsByWeek(year, week);
+
+        Map<String, Long> summary = generateSummary(borrowings);
+        return ResponseEntity.ok(summary);
+    }
+
+    @GetMapping("/monthly")
+    public ResponseEntity<Map<String, Long>> getMonthlyBorrowings(
+            @RequestParam int year,
+            @RequestParam int month) {
+        List<Borrowing> borrowings = borrowingService.getBorrowingsByMonth(year, month);
+
+        Map<String, Long> summary = generateSummary(borrowings);
+        return ResponseEntity.ok(summary);
+    }
+
+    @GetMapping("/yearly")
+    public ResponseEntity<Map<String, Long>> getYearlyBorrowings(
+            @RequestParam int year) {
+        List<Borrowing> borrowings = borrowingService.getBorrowingsByYear(year);
+
+        Map<String, Long> summary = generateSummary(borrowings);
+        return ResponseEntity.ok(summary);
+    }
+
+    private Map<String, Long> generateSummary(List<Borrowing> borrowings) {
+        Map<String, Long> summary = new HashMap<>();
+        summary.put("borrowing", borrowingService.countBorrowingsByStatus(borrowings, BorrowingStatus.DANG_MUON));
+        summary.put("returned", borrowingService.countBorrowingsByStatus(borrowings, BorrowingStatus.DA_TRA));
+        summary.put("overdue", borrowingService.countBorrowingsByStatus(borrowings, BorrowingStatus.QUA_HAN));
+        return summary;
     }
 }

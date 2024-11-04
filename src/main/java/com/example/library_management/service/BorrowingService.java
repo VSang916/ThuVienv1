@@ -1,6 +1,8 @@
 package com.example.library_management.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -98,5 +100,31 @@ public class BorrowingService {
         borrowingRepository.deleteById(id);
     }
 
+
+    public List<Borrowing> getBorrowingsByWeek(int year, int week) {
+        LocalDate startDate = LocalDate.ofYearDay(year, 1).with(WeekFields.ISO.weekOfYear(), week).with(DayOfWeek.MONDAY);
+        LocalDate endDate = startDate.plusDays(6);
+
+        return borrowingRepository.findByBorrowDateBetween(startDate, endDate);
+    }
+
+    public List<Borrowing> getBorrowingsByMonth(int year, int month) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        return borrowingRepository.findByBorrowDateBetween(startDate, endDate);
+    }
+
+    public List<Borrowing> getBorrowingsByYear(int year) {
+        LocalDate startDate = LocalDate.of(year, 1, 1);
+        LocalDate endDate = startDate.withDayOfYear(startDate.lengthOfYear());
+
+        return borrowingRepository.findByBorrowDateBetween(startDate, endDate);
+    }
+
+    public long countBorrowingsByStatus(List<Borrowing> borrowings, BorrowingStatus status) {
+        return borrowings.stream().filter(borrowing -> borrowing.getStatus() == status).count();
+    }
     // Thêm các phương thức nghiệp vụ khác nếu cần
+
 }
