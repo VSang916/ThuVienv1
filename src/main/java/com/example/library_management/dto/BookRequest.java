@@ -7,6 +7,7 @@ import com.example.library_management.entity.Book;
 public class BookRequest {
     private String title;
     private Integer quantity;
+    private String link_file;
     private Set<Long> categoryIds;
     private Set<Long> authorIds;
 
@@ -18,6 +19,13 @@ public class BookRequest {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getFile(){
+        return link_file;
+    }
+    public void setFile(String link_file){
+        this.link_file = link_file;
     }
 
     public Integer getQuantity() {
@@ -48,6 +56,7 @@ public class BookRequest {
     public Book toBook() {
         Book book = new Book();
         book.setTitle(this.title);
+        book.setFile(this.link_file);
         book.setQuantity(this.quantity);
         // Các thuộc tính khác nếu cần
         return book;

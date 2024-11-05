@@ -34,6 +34,10 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
+    public Optional<Book> getFileById(Long id){
+        return bookRepository.findById(id);
+    }
+
     // Tạo sách mới
     @Transactional
     public Book saveBook(Book book, Set<Long> categoryIds){

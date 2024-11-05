@@ -24,8 +24,8 @@ public class Book {
     private  String title;
     @Column(name = "quantity", nullable= false )
     private  Integer quantity;
-    @Column(name = "file", nullable = false)
-    private String file;
+    @Column(name = "link_file", nullable = false)
+    private String link_file;
     @ManyToMany 
     @JoinTable(
         name = "books_categories", 
@@ -49,7 +49,7 @@ public class Book {
     public Book(String title, Integer quantity){
         this.title = title;
         this.quantity = quantity;
-        this.file = file;
+        this.link_file = link_file;
     }
     public Long getId(){
         return id;
@@ -68,10 +68,10 @@ public class Book {
     }
 
     public String getFile(){
-        return file;
+        return link_file;
     }
-    public void setFile(String file){
-        this.file = file;
+    public void setFile(String link_file){
+        this.link_file = link_file;
     }
 
     public Set<Category> getCategories() {
