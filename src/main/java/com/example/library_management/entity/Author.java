@@ -1,6 +1,9 @@
 package com.example.library_management.entity;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +13,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 @Entity
 @Table(name ="authors")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "id")
 public class Author {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

@@ -3,6 +3,9 @@ package com.example.library_management.entity;
 import java.time.LocalDate;
 
 import com.example.library_management.enums.BorrowingStatus;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +20,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "borrowings")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "id")
 public class Borrowing {
     
     @Id
@@ -26,11 +32,13 @@ public class Borrowing {
     // Mối quan hệ nhiều-một với Reader
     @ManyToOne
     @JoinColumn(name = "reader_id", nullable = false)
+    @JsonManagedReference
     private Reader reader;
 
     // Mối quan hệ nhiều-một với Book
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
+    @JsonManagedReference
     private Book book;
 
     @Column(name = "borrow_date", nullable = false)

@@ -1,6 +1,10 @@
 package com.example.library_management.entity;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +20,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 @Entity
 @Table(name ="books")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "id")
 public class Book {
     @Id 
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -26,14 +33,16 @@ public class Book {
     private  Integer quantity;
     @Column(name = "link_file", nullable = false)
     private String link_file;
-    @ManyToMany 
+    @ManyToMany
+    @JsonManagedReference 
     @JoinTable(
         name = "books_categories", 
         joinColumns= @JoinColumn(name ="book_id"),
         inverseJoinColumns= @JoinColumn(name ="category_id")
     )
     private Set<Category> categories;
-    @ManyToMany 
+    @ManyToMany
+    @JsonManagedReference 
     @JoinTable(
         name ="book_authors",
         joinColumns= @JoinColumn(name="book_id"),
@@ -41,8 +50,10 @@ public class Book {
     )
     private Set<Author> authors;
     @OneToOne (mappedBy= "book", cascade= CascadeType.ALL, fetch= FetchType.LAZY,optional= true)
+    @JsonManagedReference
     private Inventory inventory ; 
     @OneToMany(mappedBy= "book", cascade= CascadeType.ALL, orphanRemoval=true)
+    @JsonManagedReference
     private  Set<Borrowing> borrowings;
     public Book(){
     }

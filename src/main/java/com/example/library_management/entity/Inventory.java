@@ -1,4 +1,8 @@
 package com.example.library_management.entity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,12 +14,16 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name ="inventory")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "id")
 public class Inventory {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     @OneToOne
     @JoinColumn(name="book_id", nullable=false, unique=true)
+    @JsonManagedReference
     private Book book;
     @Column(name="total_stock", nullable= false)
     private Integer totalStock;

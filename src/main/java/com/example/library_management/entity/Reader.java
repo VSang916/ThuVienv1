@@ -3,6 +3,9 @@ package com.example.library_management.entity;
 import java.util.Set;
 
 import com.example.library_management.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,6 +20,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "readers")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "id")
 public class Reader {
     
     @Id
@@ -41,6 +47,7 @@ public class Reader {
 
     // Mối quan hệ một-nhiều với Borrowing
     @OneToMany(mappedBy = "reader", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Borrowing> borrowings;
 
     // Constructors
