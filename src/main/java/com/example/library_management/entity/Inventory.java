@@ -1,7 +1,6 @@
 package com.example.library_management.entity;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,27 +13,32 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name ="inventory")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "id")
 public class Inventory {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
+    // Mối quan hệ một-một với Book
     @OneToOne
     @JoinColumn(name="book_id", nullable=false, unique=true)
-    @JsonManagedReference
+    @JsonManagedReference("book-inventory") // Phía quản lý của mối quan hệ
     private Book book;
+
     @Column(name="total_stock", nullable= false)
     private Integer totalStock;
+
     @Column(name="available_stock", nullable=false)
     private Integer availableStock;
-    public Inventory(){};
+
+    public Inventory(){}
+
     public Inventory(Book book, Integer totalStock, Integer availableStock) {
         this.book = book;
         this.totalStock = totalStock;
         this.availableStock = availableStock;
     }
+
+    // Getters và Setters
 
     public Long getId() {
         return id;
@@ -63,5 +67,4 @@ public class Inventory {
 	public void setAvailableStock(Integer availableStock) {
 		this.availableStock = availableStock;
 	}
-    
 }

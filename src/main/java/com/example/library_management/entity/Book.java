@@ -1,9 +1,9 @@
 package com.example.library_management.entity;
+
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,62 +18,80 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
 @Entity
 @Table(name ="books")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "id")
 public class Book {
     @Id 
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
     @Column(name ="title", nullable= false)
-    private  String title;
+    private String title;
+
     @Column(name = "quantity", nullable= false )
-    private  Integer quantity;
+    private Integer quantity;
+
     @Column(name = "link_file", nullable = false)
     private String link_file;
+
+    // Mối quan hệ nhiều-nhiều với Category
     @ManyToMany
-    @JsonManagedReference 
+    @JsonManagedReference("book-categories") // Đặt tên cho mối quan hệ
     @JoinTable(
         name = "books_categories", 
         joinColumns= @JoinColumn(name ="book_id"),
         inverseJoinColumns= @JoinColumn(name ="category_id")
     )
     private Set<Category> categories;
+
+    // Mối quan hệ nhiều-nhiều với Author
     @ManyToMany
-    @JsonManagedReference 
+    @JsonManagedReference("book-authors") // Đặt tên cho mối quan hệ
     @JoinTable(
         name ="book_authors",
         joinColumns= @JoinColumn(name="book_id"),
         inverseJoinColumns= @JoinColumn(name = "author_id")
     )
     private Set<Author> authors;
-    @OneToOne (mappedBy= "book", cascade= CascadeType.ALL, fetch= FetchType.LAZY,optional= true)
-    @JsonManagedReference
+
+    // Mối quan hệ một-một với Inventory
+    @OneToOne(mappedBy= "book", cascade= CascadeType.ALL, fetch= FetchType.LAZY, optional= true)
+    @JsonBackReference("book-inventory") // Phía ngược lại của mối quan hệ
     private Inventory inventory ; 
+
+    // Mối quan hệ một-nhiều với Borrowing
     @OneToMany(mappedBy= "book", cascade= CascadeType.ALL, orphanRemoval=true)
-    @JsonManagedReference
-    private  Set<Borrowing> borrowings;
+    @JsonBackReference("book-borrowings") // Phía ngược lại của mối quan hệ
+    private Set<Borrowing> borrowings;
+
     public Book(){
     }
+
     public Book(String title, Integer quantity){
         this.title = title;
         this.quantity = quantity;
-        this.link_file = link_file;
+        // this.link_file = link_file; // Sửa lại nếu cần
     }
+
+    // Getters và Setters
+
     public Long getId(){
         return id;
     }
+
     public String getTitle(){
         return title;
     }
+
     public void setTitle(String title){
         this.title = title;
     }
+
     public Integer getQuantity(){
         return quantity;
     }
+
     public void setQuantity(Integer quantity){
         this.quantity = quantity;
     }
@@ -81,6 +99,7 @@ public class Book {
     public String getFile(){
         return link_file;
     }
+
     public void setFile(String link_file){
         this.link_file = link_file;
     }
